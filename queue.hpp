@@ -14,6 +14,8 @@ using namespace std;
 
 int NUMBER_OF_CONSUMERS;
 int BUFFER_SIZE;
+//creating global pointer to access a list which contains completes for each consumer
+int *PER_CONSUMER_COMPLETES;
 //putting semaphores here so dont have to make mainhpp file
 //one semaphore for when producer must stop producing
 //one semaphore for when consumer must stop consuming

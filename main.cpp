@@ -30,6 +30,8 @@ int main(int argc, char *argv[]){
     //default initialize fileid to 0
     NUMBER_OF_CONSUMERS = atoi(argv[1]);
     BUFFER_SIZE = NUMBER_OF_CONSUMERS * 2;
+    int perConsumerCompletes[NUMBER_OF_CONSUMERS];
+    PER_CONSUMER_COMPLETES = &perConsumerCompletes[0];
 
     int fileID = 0;
     string prodcon = "prodcon";
@@ -108,5 +110,15 @@ int main(int argc, char *argv[]){
     sem_destroy(&semUnused);
     sem_destroy(&semUsed);
     pthread_mutex_destroy(&bufferMutex);
+
+    printf("Summary: \n");
+    printf("    %-14s%d\n", "Work", 10);
+    printf("    %-14s%d\n", "Ask", 10);
+    printf("    %-14s%d\n", "Receive", 10);
+    printf("    %-14s%d\n", "Complete", 10);
+    printf("    %-14s%d\n", "Sleep", 10);
+    for (int i = 0; i < NUMBER_OF_CONSUMERS; i++){
+        printf("    %s %2d%7d\n", "Thread", i+1, PER_CONSUMER_COMPLETES[i]);
+    }
 
 }
