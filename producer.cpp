@@ -9,17 +9,15 @@ struct aProducerThread{
 
 void * produce(void *idPointer){
     //producer id should be 0
-    int prodID = * (int*) idPointer;
     aProducerThread prodThread;
-    prodThread.id = prodID;
+    prodThread.id = 0;
     bool eof = false;
 
     char cmd[3*sizeof(char)];
     int n;
-
-    while ((scanf("%s\n", cmd)) != EOF){
-        n = int(cmd[1]);
-
+    //cout << prodThread.id << "PRODID\n";
+    while ((scanf("%c%d\n", cmd, &n)) != EOF){
+        //n = int(cmd[1]);
         if (cmd[0] == 'T'){
             //here now the producer has a item that it can add to the queue
             //use the semUnused semaphore and wait on it to decrement the current 
@@ -45,23 +43,27 @@ void * produce(void *idPointer){
         }
         // case where cmd[0] == S
         else{
+            //cout << "in S\n";
             //if there is a sleep command, you can execute it right away since the producer
             //has nothing to do with this. The command does not need to wait in the queue
             //add one to the counter of NUMBEROFSLEEPS to be able to print at the end of the execution of the program
             Sleep(n);
+            //cout << "done s\n";
             pthread_mutex_lock(&bufferMutex);
-            printf("%.3f ID=%2d      %-14s %d", 0.000, prodThread.id, "Sleep", n);
+            printf("%.3f ID=%2d      %-14s %d\n", 0.000, prodThread.id, "Sleep", n);
             NUMBEROFSLEEPS = NUMBEROFSLEEPS + 1;
             pthread_mutex_unlock(&bufferMutex);
+            //cout << "done s sem\n";
         }
 
         //0.100 ID= 0 End 
         
     }
     eof = true;
-    printf("%0.3f ID=%2d      %-14s", 0.100, prodThread.id, "End");
+    printf("%0.3f ID=%2d      %-14s\n", 0.100, prodThread.id, "End");
     
     if(eof == true){
+        // cout << "EOF IN PROD\n";
         // we reached the end of file so no more commands remain to be checked
         // notify all the producers that we are done and that they can exit their while loops
         // we need to do this in a way that the queue isnt pumped so we need to do it in a loop so that 
@@ -71,9 +73,10 @@ void * produce(void *idPointer){
         // realized that using BUFFER_SIZE will cause this while loop to iterate for extra iterations
         // and only need to put number of consumer amount of EOF into the queue not BUFFER_SIZE amount
         int i = 0;
-        while (i < NUMBER_OF_CONSUMERS){
+        while (i < BUFFER_SIZE){
             sem_wait(&semUnused);
-            pthread_mutex_lock(&bufferMutex);
+            pthread_mutex_lock(&bufferMutex);\
+            // cout << EOF << "\n";
             commands.push(EOF);
             pthread_mutex_unlock(&bufferMutex);
             sem_post(&semUsed);

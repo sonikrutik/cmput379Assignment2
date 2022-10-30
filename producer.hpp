@@ -6,6 +6,7 @@
 #include "TransandSleep.hpp"
 
 #include <cstdio>
+#include <iostream>
 #include <pthread.h>
 #include <semaphore.h>
 using namespace std;

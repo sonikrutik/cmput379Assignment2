@@ -11,11 +11,10 @@ struct aConsumerThread{
 
 
 void * consumer(void *idPointer){
+    //cout << "in cons\n";
     //have to typecast to int* and then dereference to be able to assign to consumerID of consumerThread
     int consID = * (int*) idPointer;
-
-    cout << idPointer << "\n";
-    cout << consID << "\n";
+    //cout << consID << "\n";
 
     aConsumerThread consThread;
     consThread.id = consID;
@@ -43,6 +42,10 @@ void * consumer(void *idPointer){
         // inside crit section, grab whats at the front of the queue and pop it
         // pop queue doesnt return the value so have to grab from front first
         n = commands.front();
+        // if (n == EOF){
+        //     cout << n << "CONS CMDS\n";
+        // }
+
         commands.pop();
         if (n != EOF){
             //0.000 ID= 1 Q= 1 Receive
@@ -53,24 +56,27 @@ void * consumer(void *idPointer){
         //now since consumer has consumed a command from the queue, we post to unused
         //so that if the queue was at its maxSize, the producer can produce one more command without
         //worrying about the bounding 
+        eof = n;
         pthread_mutex_unlock(&bufferMutex);
         sem_post(&semUnused);
 
         if (n != EOF){
+            
             Trans(n);
-            NUMBEROFCOMPLETES = NUMBEROFCOMPLETES + 1;
-
-            pthread_mutex_unlock(&bufferMutex);
+            
+            pthread_mutex_lock(&bufferMutex);
+            NUMBEROFCOMPLETES ++;
             //go to index of the consumer thread, increase its threadworks by one and ptu it into th elist
             consThread.threadWorks = consThread.threadWorks + 1;
             PER_CONSUMER_COMPLETES[consThread.id - 1] = consThread.threadWorks;
             printf("%.3f ID=%2d      %-14s %d\n", 0.000, consThread.id, "Complete", n);
-            pthread_mutex_lock(&bufferMutex);
+            pthread_mutex_unlock(&bufferMutex);
         }
+        
         
 
     }
-    
+    // cout << "Done cons while" << consThread.id << "\n";
     free(idPointer);
     return 0;
 }

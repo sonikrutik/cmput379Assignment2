@@ -9,7 +9,7 @@
 # $(OBJECTS):  TransandSleep.hpp queue.hpp consumer.hpp producer.hpp 
 
 prodcon: main.o consumer.o producer.o queue.o TransandSleep.o
-	g++ -pthread main.o consumer.o producer.o queue.o TransandSleep.o -o prodcon
+	g++ -pthread -Wall main.o consumer.o producer.o queue.o TransandSleep.o -o prodcon
 
 main.o: main.cpp
 	g++ -c main.cpp
