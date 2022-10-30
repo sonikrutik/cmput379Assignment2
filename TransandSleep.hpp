@@ -1,5 +1,5 @@
-
-
+#ifndef TRANSANDSLEEP_HPP
+#define TRANSANDSLEEP_HPP
 // DO NOT MODIFY THIS FILE
 
 // Trans simulates processing a transaction
@@ -20,3 +20,5 @@ void Trans( int n );
 // Parameter given expresses wait time in hundreds of a nanosecond.
 
 void Sleep( int n );
+
+#endif

@@ -1,24 +1,24 @@
 // SOURCE: https://www.youtube.com/watch?v=l6zkaJFjUbM&t=634s
 // Used this video quite a bit so I am going to leave it as a source here
 
-#include <iostream>
-#include <string.h>
-#include <errno.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sstream>
-#include <queue>
-#include <semaphore.h>
+
 
 #include "TransandSleep.hpp"
 #include "producer.hpp"
 #include "consumer.hpp"
 #include "queue.hpp"
 
+#include <errno.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string>
+#include <iostream>
+#include <pthread.h>
+#include <semaphore.h>
+
+
 using namespace std;
-
-
 
 int main(int argc, char *argv[]){
     //check there are atleast 2 arguments given to prodcon
@@ -33,7 +33,6 @@ int main(int argc, char *argv[]){
     int perConsumerCompletes[NUMBER_OF_CONSUMERS];
     PER_CONSUMER_COMPLETES = &perConsumerCompletes[0];
 
-    int fileID = 0;
     string prodcon = "prodcon";
     string log = ".log";
     string prodconFileName;
@@ -65,7 +64,7 @@ int main(int argc, char *argv[]){
 
     //pthread_create can only use pointer arguments so create id pointer
     int id = 0;
-    int *idPointer = &id;
+    int *idPointerP = &id;
 
     // this initializes a semaphore of the number of used slots in the queue
     // Initially this would be 0 so initialize it at 0
@@ -77,7 +76,7 @@ int main(int argc, char *argv[]){
     //mutex for accessing the buffer
     pthread_mutex_init(&bufferMutex, NULL);
 
-    if (pthread_create(&producerThread, NULL, produce, idPointer) != 0){
+    if (pthread_create(&producerThread, NULL, produce, idPointerP) != 0){
         fprintf(stderr, "Error creating producer thread");
     }
 
@@ -86,8 +85,10 @@ int main(int argc, char *argv[]){
     //https://www.youtube.com/watch?v=l6zkaJFjUbM&t=634s
     id++; 
     cout << id;
-    for (id; id < NUMBER_OF_CONSUMERS + 1; id++){
-        if (pthread_create(&consumerThreads[id - 1], NULL, &consumer, idPointer) != 0){
+    for (int i = 1; i < NUMBER_OF_CONSUMERS + 1; i++){
+        int* idPointerC = (int*) malloc(sizeof(int));
+        *idPointerC = i;
+        if (pthread_create(&consumerThreads[id - 1], NULL, &consumer, idPointerC) != 0){
             fprintf(stderr, "Error creating producer thread");
         }
     }

@@ -1,6 +1,8 @@
 #include "consumer.hpp"
-#include "queue.hpp"
-#include "TransandSleep.hpp"
+
+int NUMBEROFASKS = 0;
+int NUMBEROFRECEIVES = 0;
+int NUMBEROFCOMPLETES = 0;
 
 struct aConsumerThread{
     int id;
@@ -44,7 +46,7 @@ void * consumer(void *idPointer){
         commands.pop();
         if (n != EOF){
             //0.000 ID= 1 Q= 1 Receive
-            printf("%.3f ID=%2d Q=%2d %-14s %d\n", 0.000, consThread.id, commands.size(), "Work", n);
+            printf("%.3f ID=%2d Q=%2d %-14s %d\n", 0.000, consThread.id, (int)commands.size(), "Work", n);
             NUMBEROFRECEIVES = NUMBEROFRECEIVES + 1;
         
         }
@@ -70,4 +72,5 @@ void * consumer(void *idPointer){
     }
     
     free(idPointer);
+    return 0;
 }

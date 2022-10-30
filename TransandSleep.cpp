@@ -33,7 +33,6 @@ void Trans( int n ) {
 
 #include <stdio.h>
 #include <time.h>
-#include "TransandSleep.hpp"
 
 void Sleep( int n ) {
 	struct timespec sleep;

@@ -1,16 +1,17 @@
-#include <iostream>
-#include <string.h>
-#include <errno.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sstream>
-#include <queue>
-#include <semaphore.h>
+#ifndef PRODUCER_HPP
+#define PRODUCER_HPP
 
+
+#include "queue.hpp"
+#include "TransandSleep.hpp"
+
+#include <cstdio>
+#include <pthread.h>
+#include <semaphore.h>
 using namespace std;
 
-int NUMBEROFSLEEPS = 0;
-int NUMBEROFWORKS = 0;
+extern int NUMBEROFSLEEPS;
+extern int NUMBEROFWORKS;
 
-void * produce(void *arg);
+void * produce(void *idPointer);
+#endif 

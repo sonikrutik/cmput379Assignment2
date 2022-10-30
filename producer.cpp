@@ -1,7 +1,7 @@
-
 #include "producer.hpp"
-#include "TransandSleep.hpp"
-#include "queue.hpp"
+
+int NUMBEROFSLEEPS = 0;
+int NUMBEROFWORKS = 0;
 
 struct aProducerThread{
     int id;
@@ -17,7 +17,7 @@ void * produce(void *idPointer){
     char cmd[3*sizeof(char)];
     int n;
 
-    while ((scanf("%s\n", &cmd)) != EOF){
+    while ((scanf("%s\n", cmd)) != EOF){
         n = int(cmd[1]);
 
         if (cmd[0] == 'T'){
@@ -34,7 +34,7 @@ void * produce(void *idPointer){
             // and finally we can push the command n to queue
             commands.push(n);
             //            0.000 ID= 0 Q= 1 Work 4                         // Parent receives work with n=4
-            printf("%.3f ID=%2d Q=%2d %-14s %d\n", 0.000, prodThread.id, commands.size(), "Work", n);
+            printf("%.3f ID=%2d Q=%2d %-14s %d\n", 0.000, prodThread.id, (int)commands.size(), "Work", n);
             NUMBEROFWORKS = NUMBEROFWORKS + 1;
             
             pthread_mutex_unlock(&bufferMutex);
@@ -80,4 +80,5 @@ void * produce(void *idPointer){
             i++;
         }
     }
+    return 0;
 }
