@@ -89,7 +89,7 @@ int main(int argc, char *argv[]){
     }
     //cout << "past cons\n";
     //https://solarianprogrammer.com/2011/12/16/cpp-11-thread-tutorial/
-    //got idea to make thread list from this video and thsi website that had a few implementations
+    //got idea to make thread list from this video and thsi website that had a few implementations and saw it in the textbook a couple times
     //https://www.youtube.com/watch?v=l6zkaJFjUbM&t=634s
     //cout << "before producing cons\n";
     for (int i = 1; i <= NUMBER_OF_CONSUMERS; i++){
@@ -109,6 +109,8 @@ int main(int argc, char *argv[]){
     }
     // cout << "done prod join\n";
     //Waits for the threads to terminate execution
+    //cant do join and create in the same loop because it will create the thread and wait for to join. 
+    //this would not implement multithreaded programming
     //error is non 0 value. If there is a 0 returned, print the thread from the list
     //that casued an error
     //cout << "after join prod\n";
